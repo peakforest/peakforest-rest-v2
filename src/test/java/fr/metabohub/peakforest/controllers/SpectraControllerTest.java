@@ -90,9 +90,17 @@ public class SpectraControllerTest extends AControllerTest {
 				1, testController.getSpectra("fullscan-gcms", new ArrayList<String>(), new ArrayList<String>(),
 						"positive", "low", "ei", null, null, null, null, null, null, null, null, null).getBody().size(),
 				0);
+		Assert.assertEquals(1,
+				testController.getSpectra("fullscan-lcms", new ArrayList<String>(), new ArrayList<String>(), "negative",
+						"high", null, null, null, null, null, null, null, null, null, null).getBody().size(),
+				0);
 		// KO
 		Assert.assertEquals(0, testController.getSpectra("xxx-gcms", new ArrayList<String>(), new ArrayList<String>(),
 				"positive", "low", "ei", null, null, null, null, null, null, null, null, null).getBody().size(), 0);
+		Assert.assertEquals(0,
+				testController.getSpectra("fullscan-lcms", new ArrayList<String>(), new ArrayList<String>(), "negative",
+						"high", "zzzz", null, null, null, null, null, null, null, null, null).getBody().size(),
+				0);
 	}
 
 	@Test

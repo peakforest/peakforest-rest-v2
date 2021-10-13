@@ -63,6 +63,15 @@ public class CompoundControllerTest extends AControllerTest {
 		Assert.assertNull(testController.getCompound("" + AImplTest.caffeine.getId()).getBody());
 	}
 
+	@Test
+	public void testGetCompoundById_extId() {
+		// OK
+		Assert.assertNotNull(testController.getCompoundByExtId("HMDB", AImplTest.caffeine.getHmdbID()).getBody());
+		// KO
+		Assert.assertNull(testController.getCompoundByExtId(null, null).getBody());
+		Assert.assertNull(testController.getCompoundByExtId("", "").getBody());
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	// REST
 
@@ -91,6 +100,25 @@ public class CompoundControllerTest extends AControllerTest {
 		mockMvc.perform(//
 				// call REST
 				get("/compound/PFc" + caffeine.getId())//
+						.accept(MediaType.APPLICATION_JSON))//
+				// test responses
+				.andExpect(status().isOk())//
+				.andExpect(content().json("{\"id\":" + caffeine.getPeakForestID() + "," //
+						+ "\"inchi\":\"" + caffeine.getInChI() + "\","//
+						+ "\"inchikey\":\"" + caffeine.getInChIKey() + "\""//
+						// + "\"created\":" + formatDateAsString(caffeine.getCreated())//
+						+ "}"))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				// print
+				.andDo(print());
+	}
+	
+	@Test
+	public void testGetCompoundByIdJson_ExtId() throws Exception {
+		final GenericCompound caffeine = AImplTest.caffeine;
+		mockMvc.perform(//
+				// call REST
+				get("/compound/HMDB/" + caffeine.getHmdbID())//
 						.accept(MediaType.APPLICATION_JSON))//
 				// test responses
 				.andExpect(status().isOk())//

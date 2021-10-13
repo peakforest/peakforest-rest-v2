@@ -20,7 +20,7 @@ variables:
   FOLDER_PROJECT: "pforest-rest-impl"
   # trigger
   TRIGGER_IMAGE: registry.gitlab.com/finestructure/pipeline-trigger
-  TRIGGER_HOST: "services.pfem.clermont.inra.fr/gitlab"
+  TRIGGER_HOST: "services.pfem.clermont.inrae.fr/gitlab"
   TRIGGER_URL_PATH: "/api/v4/projects"
   TRIGGER_TOKEN: "05040415e207c9e307b906bed1e271"
   TRIGGER_REF_NAME: "dev"

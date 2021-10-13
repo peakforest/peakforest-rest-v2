@@ -3,6 +3,7 @@ package fr.metabohub.peakforest.implementation;
 import org.peakforest.model.Compound;
 
 import fr.metabohub.peakforest.dao.compound.IReferenceCompoundDao;
+import fr.metabohub.peakforest.enums.CompoundExternalIdEnum;
 import fr.metabohub.peakforest.model.compound.CompoundName;
 import fr.metabohub.peakforest.model.compound.ReferenceChemicalCompound;
 import fr.metabohub.peakforest.model.compound.StructureChemicalCompound;
@@ -22,6 +23,39 @@ public class CompoundImpl {
 			return pforestId != null ? getCompoundByPeakForestId(pforestId) : null;
 		}
 		return null;
+	}
+
+	public static Compound getCompoundByExtId(//
+			final String extId, //
+			final String id) {
+		final StructureChemicalCompound compoundApi;
+		if (extId != null) {
+			switch (extId) {
+			case "HMDB":
+				compoundApi = IReferenceCompoundDao.getCompoundByExternalId(//
+						CompoundExternalIdEnum.HMDB, id, StructureChemicalCompound.class);
+				break;
+			case "CHEBI":
+				compoundApi = IReferenceCompoundDao.getCompoundByExternalId(//
+						CompoundExternalIdEnum.CHEBI, id, StructureChemicalCompound.class);
+				break;
+			case "KEGG":
+				compoundApi = IReferenceCompoundDao.getCompoundByExternalId(//
+						CompoundExternalIdEnum.KEGG, id, StructureChemicalCompound.class);
+				break;
+			case "PUBCHEM":
+			case "CID":
+				compoundApi = IReferenceCompoundDao.getCompoundByExternalId(//
+						CompoundExternalIdEnum.PUBCHEM, id, StructureChemicalCompound.class);
+				break;
+			default:
+				compoundApi = null;
+				break;
+			}
+		} else {
+			compoundApi = null;
+		}
+		return mapCompound(compoundApi);
 	}
 
 	static Compound getCompoundByInChIKey(final String inChIKey) {

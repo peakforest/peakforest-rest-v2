@@ -39,9 +39,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 			final FilterChain filterChain)//
 			throws ServletException, IOException {
 		try {
-			// get user
+			// get token
 			final String token = getTokenFromRequest(request);
-			// get user
+			// get user from token
 			final User currentUser = getUserFromToken(token);
 			if (currentUser != null) {
 				// add authorization

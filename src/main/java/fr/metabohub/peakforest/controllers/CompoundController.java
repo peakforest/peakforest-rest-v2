@@ -15,4 +15,11 @@ public class CompoundController implements CompoundApi {
 		return ResponseEntity.ok(CompoundImpl.getCompound(id));
 	}
 
+	@Override
+	public ResponseEntity<Compound> getCompoundByExtId(//
+			final String extId, //
+			final String id) {
+		return ResponseEntity.ok(CompoundImpl.getCompoundByExtId(extId, id));
+	}
+
 }

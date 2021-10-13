@@ -97,6 +97,21 @@ public class SpectrumImplTest extends AImplTest {
 				((Nmr2dSpectrum) spectrumTest_spectrumCaffeineNMR2D).getPeaks().size(), 0);
 		Assert.assertEquals(spectrumCaffeineNmrJres.getPeaks().size(),
 				((Nmr2dSpectrum) spectrumTest_spectrumCaffeineNMR2DJRES).getPeaks().size(), 0);
+		// check peak patterns
+		Assert.assertEquals(spectrumCaffeineNmr1d.getListOfpeakPattern().size(),
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().size(), 0);
+		Assert.assertEquals("d",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(2 - 1).getType().toString());
+		Assert.assertEquals("t",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(3 - 1).getType().toString());
+		Assert.assertEquals("dd",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(5 - 1).getType().toString());
+		Assert.assertEquals("s",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(7 - 1).getType().toString());
+		Assert.assertEquals("q",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(11 - 1).getType().toString());
+		Assert.assertEquals("m",
+				((Nmr1dSpectrum) spectrumTest_spectrumCaffeineNMR1D).getPatterns().get(13 - 1).getType().toString());
 		// test fail
 		Assert.assertNull(SpectrumImpl.mapSpectrum(null));
 	}

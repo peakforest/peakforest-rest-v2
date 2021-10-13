@@ -24,7 +24,11 @@ public class CompoundsImpl {
 			final String query, //
 			final String queryFilter, //
 			// mass match
-			final Double massAverage, final Double massExact, final Double massDelta, //
+			final Double massAverage, final Double massExact,
+			// match other
+			final Double logp, final Double delta, //
+			// filters
+			final Integer stars, final Boolean isBioactive, //
 			// sort and offset
 			final Integer offset, final Integer limit) {
 		// init
@@ -32,7 +36,9 @@ public class CompoundsImpl {
 		// process and map
 		for (final fr.metabohub.peakforest.model.compound.Compound cpd : SearchCompoundsService.searchCompounds(//
 				query, CompoundSearchTypeEnum.fromValue(queryFilter), //
-				massAverage, massExact, massDelta, //
+				massAverage, massExact, //
+				logp, delta, //
+				stars, isBioactive, //
 				offset, limit)) {
 			compounds.add(CompoundImpl.mapCompound(cpd));
 		}
@@ -46,7 +52,11 @@ public class CompoundsImpl {
 			final String query, //
 			final String queryFilter, //
 			// mass match
-			final Double massAverage, final Double massExact, final Double massDelta, //
+			final Double massAverage, final Double massExact,
+			// match other
+			final Double logp, final Double delta, //
+			// filters
+			final Integer stars, final Boolean isBioactive, //
 			// sort and offset
 			Integer offset, Integer limit) {
 		// init
@@ -57,7 +67,9 @@ public class CompoundsImpl {
 		// process and map
 		for (final fr.metabohub.peakforest.model.compound.Compound cpd : SearchCompoundsService.searchCompounds(//
 				query, CompoundSearchTypeEnum.fromValue(queryFilter), //
-				massAverage, massExact, massDelta, //
+				massAverage, massExact, //
+				logp, delta, //
+				stars, isBioactive, //
 				offsetCheck, limitCheck)) {
 			compounds.add(CompoundImpl.mapCompound(cpd));
 		}

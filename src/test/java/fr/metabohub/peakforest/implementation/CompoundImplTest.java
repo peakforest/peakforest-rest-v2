@@ -61,6 +61,32 @@ public class CompoundImplTest extends AImplTest {
 	}
 
 	@Test
+	public void testGetCompoundByExtId() {
+		// get
+		final Compound cpd_hmdb = CompoundImpl.getCompoundByExtId("HMDB", caffeine.getHmdbID());
+		final Compound cpd_chebi = CompoundImpl.getCompoundByExtId("CHEBI", caffeine.getChEBIID());
+		final Compound cpd_kegg = CompoundImpl.getCompoundByExtId("KEGG", caffeine.getKeggID().get(0));
+		final Compound cpd_pubchem = CompoundImpl.getCompoundByExtId("PUBCHEM", caffeine.getPubChemID());
+		final Compound cpd_cid = CompoundImpl.getCompoundByExtId("CID", caffeine.getPubChemID());
+		// test OK
+		Assert.assertNotNull(cpd_hmdb);
+		Assert.assertEquals(caffeine.getPeakForestID(), cpd_hmdb.getId());
+		Assert.assertNotNull(cpd_chebi);
+		Assert.assertEquals(caffeine.getPeakForestID(), cpd_chebi.getId());
+		Assert.assertNotNull(cpd_kegg);
+		Assert.assertEquals(caffeine.getPeakForestID(), cpd_kegg.getId());
+		Assert.assertNotNull(cpd_pubchem);
+		Assert.assertEquals(caffeine.getPeakForestID(), cpd_pubchem.getId());
+		Assert.assertNotNull(cpd_cid);
+		Assert.assertEquals(caffeine.getPeakForestID(), cpd_cid.getId());
+		// test KO
+		Assert.assertNull(CompoundImpl.getCompoundByExtId("", null));
+		Assert.assertNull(CompoundImpl.getCompoundByExtId(null, null));
+		Assert.assertNull(CompoundImpl.getCompoundByExtId("xxx", null));
+		Assert.assertNull(CompoundImpl.getCompoundByExtId("hmdb", caffeine.getHmdbID()));
+	}
+
+	@Test
 	public void testMapCompound() {
 		// init
 		final ChemicalCompound cc = new ChemicalCompound();

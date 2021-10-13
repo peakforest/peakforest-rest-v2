@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import fr.metabohub.peakforest.security.AuthTokenFilter;
 
@@ -52,6 +54,7 @@ public class Application {
 
 		@Override
 		protected void configure(final HttpSecurity http) throws Exception {
+			http.cors(); //
 			http.httpBasic()//
 					.and().authorizeRequests()//
 					.antMatchers("/").permitAll()//
@@ -65,6 +68,20 @@ public class Application {
 		@Bean
 		public AuthTokenFilter authenticationJwtTokenFilter() {
 			return new AuthTokenFilter();
+		}
+
+		@Bean
+		public WebMvcConfigurer corsConfigurer() {
+			return new WebMvcConfigurer() {
+				@Override
+				public void addCorsMappings(final CorsRegistry registry) {
+					registry.addMapping("/**")//
+							.allowedHeaders("*")//
+							.allowedMethods("*")//
+							.allowedOrigins("*")//
+							.allowCredentials(true);
+				}
+			};
 		}
 
 	}

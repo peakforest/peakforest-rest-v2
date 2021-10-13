@@ -1,9 +1,8 @@
 package fr.metabohub.peakforest.implementation;
 
-import java.util.ArrayList;
-
 import org.peakforest.model.MassSpectrum.PolarityEnum;
 import org.peakforest.model.MassSpectrum.ResolutionEnum;
+import org.peakforest.model.Nmr1dPeakpattern.TypeEnum;
 import org.peakforest.model.Spectrum.SampleTypeEnum;
 
 import fr.metabohub.peakforest.dao.spectrum.ISpectrumDao;
@@ -21,6 +20,7 @@ import fr.metabohub.peakforest.model.spectrum.NMR2DPeak;
 import fr.metabohub.peakforest.model.spectrum.NMR2DSpectrum;
 import fr.metabohub.peakforest.model.spectrum.NMRSpectrum;
 import fr.metabohub.peakforest.model.spectrum.Peak;
+import fr.metabohub.peakforest.model.spectrum.PeakPattern;
 import fr.metabohub.peakforest.model.spectrum.Spectrum;
 import fr.metabohub.peakforest.utils.SearchUtils;
 
@@ -189,37 +189,40 @@ public class SpectrumImpl {
 		if (rawSpectrumApi != null && spectrumRest != null) {
 			// Mass peaks
 			if (rawSpectrumApi instanceof MassSpectrum) {
-				((org.peakforest.model.MassSpectrum) spectrumRest)
-						.setPeaks(new ArrayList<org.peakforest.model.MassPeak>());
 				for (final Peak mpApi : rawSpectrumApi.getPeaks()) {
 					final org.peakforest.model.MassPeak mpRest = new org.peakforest.model.MassPeak();
 					mpRest.setMz(((MassPeak) mpApi).getMassToChargeRatio());
 					mpRest.setRi(((MassPeak) mpApi).getRelativeIntensity());
-					((org.peakforest.model.MassSpectrum) spectrumRest).getPeaks().add(mpRest);
+					((org.peakforest.model.MassSpectrum) spectrumRest).addPeaksItem(mpRest);
 				}
 			}
-			// 1D NMR peaks
+			// 1D NMR peaks and peakpatterns
 			if (rawSpectrumApi instanceof NMR1DSpectrum) {
-				((org.peakforest.model.Nmr1dSpectrum) spectrumRest)
-						.setPeaks(new ArrayList<org.peakforest.model.Nmr1dPeak>());
+				// peaks
 				for (final Peak mpApi : rawSpectrumApi.getPeaks()) {
 					final org.peakforest.model.Nmr1dPeak mpRest = new org.peakforest.model.Nmr1dPeak();
 					mpRest.setPpm(((NMR1DPeak) mpApi).getChemicalShift());
 					mpRest.setRi(((NMR1DPeak) mpApi).getRelativeIntensity());
-					((org.peakforest.model.Nmr1dSpectrum) spectrumRest).getPeaks().add(mpRest);
+					((org.peakforest.model.Nmr1dSpectrum) spectrumRest).addPeaksItem(mpRest);
+				}
+				// patterns
+				for (final PeakPattern ppApi : ((NMR1DSpectrum) rawSpectrumApi).getListOfpeakPattern()) {
+					final org.peakforest.model.Nmr1dPeakpattern ppRest = new org.peakforest.model.Nmr1dPeakpattern();
+					ppRest.setPpm(((PeakPattern) ppApi).getChemicalShift());
+					ppRest.setType(TypeEnum.fromValue(((PeakPattern) ppApi).getPatternTypeAsString()));
+					ppRest.setAtoms(((PeakPattern) ppApi).getAtom());
+					((org.peakforest.model.Nmr1dSpectrum) spectrumRest).addPatternsItem(ppRest);
 				}
 			}
 			// 2D NMR peaks
 			if (rawSpectrumApi instanceof NMR2DSpectrum) {
-				((org.peakforest.model.Nmr2dSpectrum) spectrumRest)
-						.setPeaks(new ArrayList<org.peakforest.model.Nmr2dPeak>());
 				// spec case: JRES 2D NMR spectrum
 				if (((NMR2DSpectrum) rawSpectrumApi).getAcquisition() == NMR2DSpectrum.ACQUISITION_2D_JRES) {
 					for (final Peak mpApi : rawSpectrumApi.getPeaks()) {
 						final org.peakforest.model.Nmr2dPeak mpRest = new org.peakforest.model.Nmr2dPeak();
 						mpRest.setPpmF1(((NMR2DJRESPeak) mpApi).getChemicalShiftF1());
 						mpRest.setPpmF2(((NMR2DJRESPeak) mpApi).getChemicalShiftF1());
-						((org.peakforest.model.Nmr2dSpectrum) spectrumRest).getPeaks().add(mpRest);
+						((org.peakforest.model.Nmr2dSpectrum) spectrumRest).addPeaksItem(mpRest);
 					}
 				}
 				// classic case: 2D NMR spectrum
@@ -228,12 +231,11 @@ public class SpectrumImpl {
 						final org.peakforest.model.Nmr2dPeak mpRest = new org.peakforest.model.Nmr2dPeak();
 						mpRest.setPpmF1(((NMR2DPeak) mpApi).getChemicalShiftF1());
 						mpRest.setPpmF2(((NMR2DPeak) mpApi).getChemicalShiftF1());
-						((org.peakforest.model.Nmr2dSpectrum) spectrumRest).getPeaks().add(mpRest);
+						((org.peakforest.model.Nmr2dSpectrum) spectrumRest).addPeaksItem(mpRest);
 					}
-				}
-
-			}
-		}
-	}
+				} // end 2D NMR types
+			} // end spectra type
+		} // fi spectra NULL
+	} //
 
 }

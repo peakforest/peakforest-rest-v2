@@ -23,11 +23,22 @@ public class CompoundsController implements CompoundsApi {
 			final String query, //
 			final String queryFilter, //
 			// mass match
-			final Double massAverage, final Double massExact, final Double massDelta, //
+			final Double massAverage, final Double massExact,
+			// match other
+			final Double logp, final Double delta, //
+			// filters
+			final Integer stars, final Boolean isBioactive, //
 			// sort and offset
 			final Integer offset, final Integer limit) {
-		return ResponseEntity
-				.ok(CompoundsImpl.getCompounds(query, queryFilter, massAverage, massExact, massDelta, offset, limit));
+		return ResponseEntity.ok(//
+				CompoundsImpl.getCompounds(//
+						query, queryFilter, //
+						massAverage, massExact, //
+						logp, delta, //
+						stars, isBioactive, //
+						offset, limit//
+				)//
+		);
 	}
 
 	@Override
@@ -37,11 +48,23 @@ public class CompoundsController implements CompoundsApi {
 			final String query, //
 			final String queryFilter, //
 			// mass match
-			final Double massAverage, final Double massExact, final Double massDelta, //
+			final Double massAverage, final Double massExact,
+			// match other
+			final Double logp, final Double delta, //
+			// filters
+			final Integer stars, final Boolean isBioactive, //
 			// sort and offset
 			final Integer offset, final Integer limit) {
-		return ResponseEntity.ok(CompoundsImpl.getCompoundsProperties(properties, query, queryFilter, massAverage,
-				massExact, massDelta, offset, limit));
+		return ResponseEntity.ok(//
+				CompoundsImpl.getCompoundsProperties(//
+						properties, //
+						query, queryFilter, //
+						massAverage, massExact, //
+						logp, delta, //
+						stars, isBioactive, //
+						offset, limit//
+				)//
+		);
 	}
 
 }

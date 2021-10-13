@@ -51,10 +51,10 @@ public class CompoundsControllerTest extends AControllerTest {
 	@Test
 	public void testGetCompounds() {
 		// init test data
-		final List<Compound> testOK1 = testController.getCompounds("RYYVLZVUVIJVGH", null, null, null, null, null, null)
-				.getBody();
-		final List<Compound> testKO1 = testController.getCompounds("AAAAAAAAAAAAAA", null, null, null, null, null, null)
-				.getBody();
+		final List<Compound> testOK1 = testController
+				.getCompounds("RYYVLZVUVIJVGH", null, null, null, null, null, null, null, null, null).getBody();
+		final List<Compound> testKO1 = testController
+				.getCompounds("AAAAAAAAAAAAAA", null, null, null, null, null, null, null, null, null).getBody();
 		// test OK match - no param.
 		Assert.assertEquals(1L, testOK1.size(), 0);
 		Assert.assertTrue(testOK1.get(0) instanceof Compound);
@@ -66,9 +66,11 @@ public class CompoundsControllerTest extends AControllerTest {
 	public void testGetCompoundsProperties() {
 		// init test data
 		final Object testOK1 = testController
-				.getCompoundsProperties(null, "RYYVLZVUVIJVGH", null, null, null, null, null, null).getBody();
+				.getCompoundsProperties(null, "RYYVLZVUVIJVGH", null, null, null, null, null, null, null, null, null)
+				.getBody();
 		final Object testKO1 = testController
-				.getCompoundsProperties(null, "AAAAAAAAAAAAAA", null, null, null, null, null, null).getBody();
+				.getCompoundsProperties(null, "AAAAAAAAAAAAAA", null, null, null, null, null, null, null, null, null)
+				.getBody();
 		// test OK match - no param.
 		Assert.assertTrue(testOK1 instanceof List<?>);
 		Assert.assertEquals(1L, ((List<?>) testOK1).size(), 0);

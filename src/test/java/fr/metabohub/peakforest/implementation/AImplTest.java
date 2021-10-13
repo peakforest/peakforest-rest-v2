@@ -41,6 +41,7 @@ import fr.metabohub.peakforest.model.spectrum.NMR1DSpectrum;
 import fr.metabohub.peakforest.model.spectrum.NMR2DJRESPeak;
 import fr.metabohub.peakforest.model.spectrum.NMR2DPeak;
 import fr.metabohub.peakforest.model.spectrum.NMR2DSpectrum;
+import fr.metabohub.peakforest.model.spectrum.PeakPattern;
 import fr.metabohub.peakforest.utils.PeakForestApiHibernateUtils;
 import fr.metabohub.peakforest.utils.PeakForestEntityException;
 import fr.metabohub.peakforest.utils.PeakForestUtils;
@@ -122,6 +123,8 @@ public abstract class AImplTest {
 			liquidChromato.setSeparationFlowRate(1.1);
 			spectrumInit.setLiquidChromatography(LiquidChromatographyMetadataDao.read(session,
 					LiquidChromatographyMetadataDao.create(session, liquidChromato), LiquidChromatography.class));
+			spectrumInit.setRangeRetentionTimeFrom(42.0);
+			spectrumInit.setRangeRetentionTimeTo(43.0);
 			// init analyzer metadata
 			final AnalyzerLiquidMassIonization analyzerMassIonizationMetadata = new AnalyzerLiquidMassIonization();
 			analyzerMassIonizationMetadata.setIonizationMethod(AnalyzerLiquidMassIonization.IONIZATION_METHOD_ACPI);
@@ -132,6 +135,8 @@ public abstract class AImplTest {
 			analyzerMassSpectrometerDevice.setIonAnalyzerType("qqq");
 			MetadataDao.create(session, analyzerMassSpectrometerDevice);
 			spectrumInit.setAnalyzerMassSpectrometerDevice(analyzerMassSpectrometerDevice);
+			// precursor
+			spectrumInit.setParentIonMZ(42.0);
 			// insert / read
 			FragmentationLCSpectrumDao.create(session, spectrumInit);
 			spectrumCaffeineFragmentationLCMS = ISpectrumDao.read(//
@@ -157,6 +162,27 @@ public abstract class AImplTest {
 				mp1.setChemicalShift((double) (150 + 2 * i));
 				mp1.setSource(spectrumInit);
 				spectrumInit.addPeak(mp1);
+			}
+			// init patterns
+			for (int i = 1; i <= 20; i++) {
+				final PeakPattern pp = new PeakPattern();
+				pp.setChemicalShift((double) (100 + 2 * i));
+				pp.setAtom("H" + i);
+				if (i % 2 == 0) {
+					pp.setPatternType(PeakPattern.PATTERN_DOUBLET);
+				} else if (i % 3 == 0) {
+					pp.setPatternType(PeakPattern.PATTERN_TRIPLET);
+				} else if (i % 5 == 0) {
+					pp.setPatternType(PeakPattern.PATTERN_DOUBLET_DOUBLET);
+				} else if (i % 7 == 0) {
+					pp.setPatternType(PeakPattern.PATTERN_SINGULET);
+				} else if (i % 11 == 0) {
+					pp.setPatternType(PeakPattern.PATTERN_QUADRUPLPET);
+				} else {
+					pp.setPatternType(PeakPattern.PATTERN_MULTIPLET);
+				}
+				pp.setSource(spectrumInit);
+				spectrumInit.addPeakPattern(pp);
 			}
 			// init chromato metadata
 			final SampleNMRTubeConditions tube = new SampleNMRTubeConditions();
@@ -290,6 +316,8 @@ public abstract class AImplTest {
 			liquidChromato.addSeparationFlowGradient(3.0, 0.0, 100.0);
 			spectrumInit.setLiquidChromatography(LiquidChromatographyMetadataDao.read(session,
 					LiquidChromatographyMetadataDao.create(session, liquidChromato), LiquidChromatography.class));
+			spectrumInit.setRangeRetentionTimeFrom(25.0);
+			spectrumInit.setRangeRetentionTimeTo(26.0);
 			// init analyzer metadata
 			final AnalyzerLiquidMassIonization analyzerMassIonizationMetadata = new AnalyzerLiquidMassIonization();
 			analyzerMassIonizationMetadata.setIonizationMethod(AnalyzerLiquidMassIonization.IONIZATION_METHOD_APPI);
@@ -339,6 +367,8 @@ public abstract class AImplTest {
 			gasChromatoCaffeine = GazChromatographyMetadataDao.read(session,
 					GazChromatographyMetadataDao.create(session, gasChrmato), GazChromatography.class);
 			spectrumInit.setGazChromatography(gasChromatoCaffeine);
+			spectrumInit.setRangeRetentionTimeFrom(33.3);
+			spectrumInit.setRangeRetentionTimeTo(34.3);
 			// init metadata
 			final AnalyzerGasMassIonization analyzerMassIonizationMetadata = new AnalyzerGasMassIonization();
 			analyzerMassIonizationMetadata.setIonizationMethod(AnalyzerGasMassIonization.GC_IONIZATION_METHOD_EI);
@@ -365,6 +395,10 @@ public abstract class AImplTest {
 			caffeineInit.setInChI("InChI=1/C8H10N4O2/c1-10-4-9-6-5(10)7(13)12(3)8(14)11(6)2/h4H,1-3H3");
 			caffeineInit.setFormula("C8H10N4O2");
 			caffeineInit.addName(new CompoundName("caffeine - junit test", caffeineInit));
+			caffeineInit.setHmdbID("caffeine-hmdb-id");
+			caffeineInit.setChEBIID("caffeine-chebi-id");
+			caffeineInit.setPubChemID("caffeine-pubchem-id");
+			caffeineInit.addKeggId("caffeine-kegg-id1");
 			// insert / read
 			GenericCompoundDao.create(session, caffeineInit);
 			caffeine = IReferenceCompoundDao.read(//

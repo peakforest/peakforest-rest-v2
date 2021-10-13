@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.metabohub</groupId>
 	<artifactId>peakforest-rest-impl</artifactId>
-	<version>2.2.0</version>
+	<version>2.3.0</version>
 	<packaging>jar</packaging>
 
 	<name>PeakForest - REST Implementation</name>
@@ -28,7 +28,7 @@
 		<mysql.version>8.0.17</mysql.version>
 		<hibernate.version>5.4.4.Final</hibernate.version>
 		<!-- peakforest version -->
-		<peakforest.version>2.2.0</peakforest.version>
+		<peakforest.version>2.3.0</peakforest.version>
 		<!-- maven dep. -->
 		<lombok.version>1.18.10</lombok.version>
 		<!-- git and build informations -->

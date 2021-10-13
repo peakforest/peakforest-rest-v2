@@ -1,5 +1,5 @@
-[![pipeline status](https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-impl/badges/dev/pipeline.svg)](https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-impl/commits/dev)
-[![coverage report](https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-impl/badges/dev/coverage.svg)](https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-impl/commits/dev)
+[![pipeline status](https://services.pfem.clermont.inrae.fr/gitlab/peakforest/peakforest-rest-impl/badges/dev/pipeline.svg)](https://services.pfem.clermont.inrae.fr/gitlab/peakforest/peakforest-rest-impl/commits/dev)
+[![coverage report](https://services.pfem.clermont.inrae.fr/gitlab/peakforest/peakforest-rest-impl/badges/dev/coverage.svg)](https://services.pfem.clermont.inrae.fr/gitlab/peakforest/peakforest-rest-impl/commits/dev)
 
 # PeakForest - REST Implementation
 
@@ -17,7 +17,7 @@ This project uses and requires:
 - maven 4+
 - MySQL 5+
 
-Note: this project is an implementation of the [PForest - REST Specifications](https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-spec) one.
+Note: this project is an implementation of the [PForest - REST Specifications](https://services.pfem.clermont.inrae.fr/gitlab/peakforest/peakforest-rest-spec) one.
 
 ### Prerequisites
 
@@ -25,7 +25,7 @@ Use [STS](https://spring.io/tools) IDE.
 
 ### Installing
 
-- get project data `git clone git@services.pfem.clermont.inra.fr:peakforest/peakforest-rest-impl.git`
+- get project data `git clone git@services.pfem.clermont.inrae.fr:peakforest/peakforest-rest-impl.git`
 - Build command `mvn clean install` produce:
    - `peakforest-rest-X.jar` (java bin file, ready to be run in command line; `X` matching the current version number)
 
@@ -125,14 +125,14 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [GitLab](https://services.pfem.clermont.inra.fr/gitlab/your/project) for versioning. 
-For the versions available, see the [tags on this repository](https://services.pfem.clermont.inra.fr/gitlab/your/project/tags). 
+We use [GitLab](https://services.pfem.clermont.inrae.fr/gitlab/your/project) for versioning. 
+For the versions available, see the [tags on this repository](https://services.pfem.clermont.inrae.fr/gitlab/your/project/tags). 
 
 ## Authors
 
 * **Firstname lastname** - *Initial work* - 
 
-See also the list of [contributors](https://services.pfem.clermont.inra.fr/gitlab/your/projectcontributors) who participated in this project.
+See also the list of [contributors](https://services.pfem.clermont.inrae.fr/gitlab/your/projectcontributors) who participated in this project.
 
 ## License
 

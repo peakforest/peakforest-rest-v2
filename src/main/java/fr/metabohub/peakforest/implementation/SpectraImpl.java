@@ -138,7 +138,7 @@ public class SpectraImpl {
 				idCompounds, idChromatographies, //
 				MassSpectrum.getStandardizedPolarity(polarity), //
 				MassSpectrum.getStandardizedResolution(resolution), //
-				AnalyzerLiquidMassIonization.getStandardizedIonization(ionizationMethod), //
+				getSpectraStandardizedIonization(ionizationMethod), //
 				ionAnalyzerType, //
 				null, //
 				null, //
@@ -167,7 +167,7 @@ public class SpectraImpl {
 				idCompounds, idChromatographies, //
 				MassSpectrum.getStandardizedPolarity(polarity), //
 				MassSpectrum.getStandardizedResolution(resolution), //
-				AnalyzerLiquidMassIonization.getStandardizedIonization(ionizationMethod), //
+				getSpectraStandardizedIonization(ionizationMethod), //
 				ionAnalyzerType, //
 				null, //
 				null, //
@@ -229,6 +229,15 @@ public class SpectraImpl {
 		}
 		// return
 		return spectra;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// private methods
+
+	private static Short getSpectraStandardizedIonization(//
+			final String ionizationMethod) {
+		return ionizationMethod != null ? AnalyzerLiquidMassIonization.getStandardizedIonization(ionizationMethod)
+				: null;
 	}
 
 }
