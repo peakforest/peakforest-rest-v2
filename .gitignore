@@ -1,0 +1,11 @@
+target
+.classpath
+.project
+.settings
+.svn
+*.class
+src/test/resources/outputFiles
+bin
+*~
+*.jar
+src/main/resources/peakforest_rest_api.yaml

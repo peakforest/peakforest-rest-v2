@@ -1,0 +1,373 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.metabohub</groupId>
+	<artifactId>peakforest-rest-impl</artifactId>
+	<version>2.2.0</version>
+	<packaging>jar</packaging>
+
+	<name>PeakForest - REST Implementation</name>
+	<url>https://services.pfem.clermont.inra.fr/gitlab/peakforest/peakforest-rest-impl</url>
+	<description>PeakForest database's Webservice REST</description>
+
+	<!-- legacy -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.4.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<!-- project conf -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.java.version>1.8</project.build.java.version>
+		<!-- database tools version -->
+		<mysql.version>8.0.17</mysql.version>
+		<hibernate.version>5.4.4.Final</hibernate.version>
+		<!-- peakforest version -->
+		<peakforest.version>2.2.0</peakforest.version>
+		<!-- maven dep. -->
+		<lombok.version>1.18.10</lombok.version>
+		<!-- git and build informations -->
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+		<!-- for tests -->
+		<junit.version>4.12</junit.version>
+	</properties>
+
+	<scm>
+		<connection>scm:git:git@services.pfem.clermont.inra.fr:peakforest/peakforest-rest-impl.git</connection>
+	</scm>
+
+	<dependencies>
+
+		<!-- Spring web starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- spring security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- tag::actuator[] -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.boot</groupId> -->
+		<!-- <artifactId>spring-boot-starter-actuator</artifactId> -->
+		<!-- </dependency> -->
+		<!-- end::actuator[] -->
+
+		<!-- tag::openapi[] -->
+		<!-- Required for swagger code generation -->
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>peakforest-rest-spec</artifactId>
+			<version>${peakforest.version}</version>
+		</dependency>
+		<!-- end::openapi[] -->
+
+		<!-- MySQL database driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!-- hibernate persistence -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
+
+		<!-- PForest dependencies -->
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>peakforest-utils</artifactId>
+			<version>${peakforest.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-mapper-asl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>peakforest-datamodel</artifactId>
+			<version>${peakforest.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-mapper-asl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>io-spectrafile-api</artifactId>
+			<version>${peakforest.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>peakforest-api</artifactId>
+			<version>${peakforest.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>fr.metabohub</groupId>
+					<artifactId>externalbanks-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>fr.metabohub</groupId>
+					<artifactId>peakforest-peakmatching-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>fr.metabohub</groupId>
+					<artifactId>io-chemfile-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>fr.metabohub</groupId>
+					<artifactId>externaltools-api</artifactId>
+				</exclusion>
+				<!-- <exclusion> -->
+				<!-- <groupId>fr.metabohub</groupId> -->
+				<!-- <artifactId>io-spectrafile-api</artifactId> -->
+				<!-- </exclusion> -->
+				<exclusion>
+					<groupId>fr.metabohub</groupId>
+					<artifactId>peakforest-template_files</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-mapper-asl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.jackson</groupId>
+					<artifactId>jackson-xc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>edu.uconn</groupId>
+					<artifactId>bioSM</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.openbabel</groupId>
+					<artifactId>openbabel</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- xml dump -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
+		<!-- <artifactId>jackson-databind</artifactId> -->
+		<!-- </dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- tag::tests[] -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.junit.jupiter</groupId>
+					<artifactId>junit-jupiter</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-junit-jupiter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- spring security test -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- junit test - https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework</groupId> -->
+		<!-- <artifactId>spring-test</artifactId> -->
+		<!-- <scope>runtime</scope> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.mockito</groupId> -->
+		<!-- <artifactId>mockito-all</artifactId> -->
+		<!-- <version>1.10.19</version> -->
+		<!-- </dependency> -->
+
+		<dependency>
+			<groupId>fr.metabohub</groupId>
+			<artifactId>externalbanks-api</artifactId>
+			<version>${peakforest.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- end::tests[] -->
+
+	</dependencies>
+
+	<build>
+
+		<finalName>peakforest-rest-${project.version}</finalName>
+		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>${basedir}/WebContent/WEB-INF/lib</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>*-sources.jar</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<plugins>
+
+			<!-- Spring framework -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- set java version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${project.build.java.version}</source>
+					<target>${project.build.java.version}</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+
+			<!-- war - Deploy the jar in the same project -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<goals>
+					<goal>jar</goal>
+				</goals>
+				<configuration>
+					<outputDirectory>target/</outputDirectory>
+				</configuration>
+			</plugin>
+
+			<!-- clean -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/WEB-INF/lib/</directory>
+							<includes>
+								<include>**/*-sources.jar</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+			<!-- git infos for build -->
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<dateFormat>yyyyMMdd-HHmmss</dateFormat>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<generateGitPropertiesFile>false</generateGitPropertiesFile>
+				</configuration>
+			</plugin>
+
+			<!-- javadoc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doctitle>My API for ${project.name} ${project.version}</doctitle>
+					<windowtitle>My API for ${project.name} ${project.version}</windowtitle>
+					<testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle>
+					<testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle>
+					<failOnWarnings>true</failOnWarnings>
+				</configuration>
+			</plugin>
+
+			<!-- code coverage -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
+				<executions>
+					<execution>
+						<id>pre-unit-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- force UTF-8 / GTM tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>${argLine} -Xmx4096m -XX:MaxPermSize=512M
+						-Dfile.encoding=UTF-8 -Duser.timezone=GMT</argLine>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

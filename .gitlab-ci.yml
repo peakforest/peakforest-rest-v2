@@ -1,0 +1,143 @@
+# docker image
+image: metabohub/pforest-dev
+
+# maven env.
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode -Dmaven.repo.local=/root/.m2/repository"
+  # database
+  MYSQL_HOSTNAME: "mysql-test-server"
+  MYSQL_ROOT_PASSWORD: "password"
+  MYSQL_DATABASE: "peakforestTest"
+  MYSQL_USERNAME: "peakforest@'%'"
+  MYSQL_USERPASSW: "peakforest"
+  # SSH / SCP
+  SSH_OPTS: " -q -t "
+  SSH_USER: "gitlab-bot"
+  SSH_HOST: "147.99.132.187"
+  # reports
+  FOLDER_REPORT: "code_report_pforest"
+  FOLDER_JAVADOC: "javadoc_pforest"
+  FOLDER_PROJECT: "pforest-rest-impl"
+  # trigger
+  TRIGGER_IMAGE: registry.gitlab.com/finestructure/pipeline-trigger
+  TRIGGER_HOST: "services.pfem.clermont.inra.fr/gitlab"
+  TRIGGER_URL_PATH: "/api/v4/projects"
+  TRIGGER_TOKEN: "05040415e207c9e307b906bed1e271"
+  TRIGGER_REF_NAME: "dev"
+
+# cache 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - target/
+
+# stages
+stages:
+  - trigger_spec
+  - build
+  - tests
+  - code_report
+  - artifacts
+
+# jobs
+trigger pforest rest spec pipeline:
+  stage: trigger_spec
+  tags:
+    - docker
+  image: $TRIGGER_IMAGE
+  except:
+    refs:
+      - master
+      - tags
+  script:
+    - trigger -h $TRIGGER_HOST -u $TRIGGER_URL_PATH -a $API_TOKEN -p "$TRIGGER_TOKEN" -t $TRIGGER_REF_NAME 250
+
+build:
+  stage: build
+  tags:
+    - docker
+  script:
+    - mvn $MAVEN_CLI_OPTS -Dmaven.test.skip=true clean package
+
+tests:
+  stage: tests
+  tags:
+    - docker
+  services:
+    - name: mysql:5.7
+      alias: mysql-test-server
+  except:
+    refs:
+      - master
+      - tags
+  before_script:
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=$MYSQL_HOSTNAME --execute="DROP DATABASE IF EXISTS $MYSQL_DATABASE;  CREATE DATABASE $MYSQL_DATABASE CHARACTER SET utf8; "
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=$MYSQL_HOSTNAME --execute="DROP USER IF EXISTS $MYSQL_USERNAME;          CREATE USER $MYSQL_USERNAME IDENTIFIED BY '$MYSQL_USERPASSW'; "
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=$MYSQL_HOSTNAME --execute="REVOKE ALL, GRANT OPTION FROM $MYSQL_USERNAME ; GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO $MYSQL_USERNAME; "
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=$MYSQL_HOSTNAME --execute="FLUSH PRIVILEGES; "
+    - sed -i -e "s/localhost/$MYSQL_HOSTNAME/g"  -e 's/<property name="show_sql">true<\/property>/<property name="show_sql">false<\/property>/g'  src/test/resources/hibernateTest.cfg.xml
+  script:
+    - echo "[info] test javadoc generation";
+    - mvn $MAVEN_CLI_OPTS javadoc:javadoc
+    - echo "[info] run unit tests";
+    - mvn $MAVEN_CLI_OPTS test >> /tmp/junit-test.log || tail -50 /tmp/junit-test.log
+    - echo "[info] check code coverage";
+    - cat target/site/jacoco/jacoco.csv | grep  -v '.*fr\.metabohub\.peakforest\.rest.*' | awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, "instructions covered"; print 100*covered/instructions, "% covered" }'
+
+# post code reports on dev. server (code cov. + javadoc)
+code report:
+  stage: code_report
+  tags:
+    - docker
+  image: "pfem/ssh-utils"
+  except:
+    refs:
+      - master
+      - tags
+  before_script:
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
+  script:
+    - echo "[gitlab-ci] remove old code report on test server";
+    - ssh $SSH_OPTS $SSH_USER@$SSH_HOST "rm -rf /var/www/html/$FOLDER_REPORT/$FOLDER_PROJECT "
+    - ssh $SSH_OPTS $SSH_USER@$SSH_HOST "rm -rf /var/www/html/$FOLDER_JAVADOC/$FOLDER_PROJECT "
+    - echo "[gitlab-ci] copy code report and javadoc to test server";
+    - scp -r target/site/jacoco $SSH_USER@$SSH_HOST:/var/www/html/$FOLDER_REPORT/$FOLDER_PROJECT
+    - scp -r target/site/apidocs $SSH_USER@$SSH_HOST:/var/www/html/$FOLDER_JAVADOC/$FOLDER_PROJECT
+    
+# build artifact for dev. branches
+jar-tmp:
+  stage: artifacts
+  tags:
+    - docker
+  script:
+    - mkdir artifacts
+    - cp $CI_PROJECT_DIR/target/*.jar  $CI_PROJECT_DIR/artifacts/
+  except:
+    refs:
+      - master
+      - tags
+  artifacts:
+    name: peakforest-rest-$CI_COMMIT_REF_NAME
+    expire_in: 1 day
+    paths:
+        - $CI_PROJECT_DIR/artifacts
+
+# build artifact for stables releases
+jar-lts:
+  stage: artifacts
+  tags:
+    - docker
+  script:
+    - mkdir artifacts
+    - cp $CI_PROJECT_DIR/target/*.jar  $CI_PROJECT_DIR/artifacts/
+  only:
+    refs:
+      - master
+      - tags
+  artifacts:
+    name: peakforest-rest-$CI_COMMIT_REF_NAME
+    paths:
+        - $CI_PROJECT_DIR/artifacts
