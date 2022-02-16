@@ -36,6 +36,8 @@ public class SpectrumImpl {
 					// withPeaks, withCompounds, withCurationMessage,
 					Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, //
 					// withMetadata
+					Boolean.TRUE, //
+					// with parent and children
 					Boolean.TRUE);
 			// map and return
 			return mapSpectrum(rawSpectrumApi);
